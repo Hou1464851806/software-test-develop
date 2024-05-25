@@ -18,7 +18,7 @@ class NewVisitorTest(unittest.TestCase):
         self.browser.get("http://localhost:8000")
         # 网页标题应该有“To-Do” 头部也应该有这个词
         self.assertIn("To-Do",self.browser.title)
-        header_text = self.browser.find_element(By.TAG_NAME,'h1').text
+        header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn("To-Do",header_text)
         # 页面有可供输入的输入框
         inputbox = self.browser.find_element(By.ID,'id_new_item')
