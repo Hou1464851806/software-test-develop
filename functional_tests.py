@@ -30,8 +30,9 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         table = self.browser.find_element(By.ID,'id_list_table')
-        rows = table.find_element(By.TAG_NAME,'tr')
+        rows = table.find_elements(By.TAG_NAME,'tr')
         self.assertIn("1: Buy flowers",[row.text for row in rows])
+        self.assertIn("2: Give a gift to Lisi",[row.text for row in rows])
         # 会继续出现输入框来等待创建新的代办事项
 
         # 用户关闭网页后，使用上次相同的url进入，应该可以看到之前创建所有的代办事项
