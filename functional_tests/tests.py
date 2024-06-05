@@ -54,3 +54,36 @@ class NewVisitorTest(LiveServerTestCase):
 
         # 用户关闭网页后，使用上次相同的url进入，应该可以看到之前创建所有的代办事项
         self.fail("Finish the test")
+
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        self.browser.get(self.live_server_url)
+
+        inputbox = self.browser.find_element(By.ID,'id_new_item')
+        self.assertEqual(inputbox.get_attribute('placeholder'),'Enter a to-do item')
+        inputbox.send_keys('Buy flowers')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Buy flowers')
+
+        zhangsan_list_url = self.browser.current_url
+        self.assertRegex(zhangsan_list_url,"/lists/.+")
+
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element(By.TAG_NAME,'body').text
+        self.assertNotIn('Buy flowers',page_text)
+        self.assertNotIn('Give a gift to Lisi',page_text)
+
+        inputbox = self.browser.find_element(By.ID,'id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Buy milk')
+
+        wangwu_list_url = self.browser.current_url
+        self.assertRegex(wangwu_list_url,"/lists/.+")
+        self.assertNotEqual(wangwu_list_url,zhangsan_list_url)
+
+        page_text = self.browser.find_element(By.TAG_NAME,'body').text
+        self.assertNotIn('Buy flowers',page_text)
+        self.assertNotIn('Give a gift to Lisi',page_text)
