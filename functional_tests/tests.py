@@ -2,11 +2,12 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from django.test import LiveServerTestCase
 import time
 import unittest
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Chrome()
 
@@ -20,7 +21,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # 用户打开页面
-        self.browser.get("http://localhost:8000")
+        self.browser.get(self.live_server_url)
         # 网页标题应该有“To-Do” 头部也应该有这个词
         self.assertIn("To-Do",self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
@@ -45,7 +46,3 @@ class NewVisitorTest(unittest.TestCase):
 
         # 用户关闭网页后，使用上次相同的url进入，应该可以看到之前创建所有的代办事项
         self.fail("Finish the test")
-
-
-if __name__ == "__main__":
-    unittest.main()
